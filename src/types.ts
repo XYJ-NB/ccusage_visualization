@@ -11,6 +11,7 @@ export interface UsageRow {
   date?: string;
   week?: string;
   month?: string;
+  period?: string;
   inputTokens: number;
   outputTokens: number;
   cacheReadTokens: number;
@@ -36,6 +37,7 @@ export interface SessionRow {
   cacheCreationTokens: number;
   totalTokens: number;
   totalCost: number;
+  commands?: string[];
   modelBreakdowns?: Array<{
     modelName: string;
     inputTokens: number;

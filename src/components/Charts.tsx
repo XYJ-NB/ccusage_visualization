@@ -3,6 +3,8 @@ import {
   ResponsiveContainer,
   AreaChart,
   Area,
+  LineChart,
+  Line,
   BarChart,
   Bar,
   PieChart,
@@ -12,8 +14,7 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
-  Line
+  Legend
 } from "recharts";
 import { TrendingUp, BarChart3, PieChart as PieIcon, Coins } from "lucide-react";
 import { UsageRow } from "../types";
@@ -41,7 +42,7 @@ export default function Charts({ data, dataType }: ChartsProps) {
   // Format data for charts
   const chartData = data.map(row => {
     return {
-      name: row.date || row.week || row.month || "",
+      name: row.date || row.week || row.month || row.period || "",
       input: row.inputTokens,
       output: row.outputTokens,
       cacheRead: row.cacheReadTokens,
@@ -213,35 +214,17 @@ export default function Charts({ data, dataType }: ChartsProps) {
         {activeTab === "token_trend" && (
           <div className="w-full h-[380px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorInput" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#a78bfa" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#a78bfa" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorOutput" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorRead" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#34d399" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#34d399" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorWrite" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#fbbf24" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#fbbf24" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
+              <BarChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={{ stroke: '#cbd5e1', strokeWidth: 1 }} />
                 <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} tickFormatter={formatTokensToM} />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', color: '#64748b', paddingTop: '15px' }} />
-                <Area type="monotone" dataKey="input" name="标准输入" stroke="#a78bfa" strokeWidth={2} fillOpacity={1} fill="url(#colorInput)" stackId="1" />
-                <Area type="monotone" dataKey="output" name="输出生成" stroke="#6366f1" strokeWidth={2} fillOpacity={1} fill="url(#colorOutput)" stackId="1" />
-                <Area type="monotone" dataKey="cacheRead" name="缓存命中 (读取)" stroke="#34d399" strokeWidth={2} fillOpacity={1} fill="url(#colorRead)" stackId="1" />
-                <Area type="monotone" dataKey="cacheWrite" name="缓存未命中 (写入)" stroke="#fbbf24" strokeWidth={2} fillOpacity={1} fill="url(#colorWrite)" stackId="1" />
-              </AreaChart>
+                <Bar dataKey="input" name="标准输入" stackId="a" fill="#a78bfa" />
+                <Bar dataKey="output" name="输出生成" stackId="a" fill="#6366f1" />
+                <Bar dataKey="cacheRead" name="缓存命中 (读取)" stackId="a" fill="#34d399" />
+                <Bar dataKey="cacheWrite" name="缓存未命中 (写入)" stackId="a" fill="#fbbf24" />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         )}
@@ -249,20 +232,14 @@ export default function Charts({ data, dataType }: ChartsProps) {
         {activeTab === "cost_trend" && (
           <div className="w-full h-[380px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorCost" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
+              <LineChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={{ stroke: '#cbd5e1', strokeWidth: 1 }} />
                 <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} unit="$" />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend wrapperStyle={{ fontSize: '12px', color: '#64748b', paddingTop: '15px' }} />
-                <Area type="monotone" dataKey="cost" name="预估开销" stroke="#8b5cf6" strokeWidth={3} fillOpacity={1} fill="url(#colorCost)" />
-              </AreaChart>
+                <Line type="monotone" dataKey="cost" name="预估开销" stroke="#8b5cf6" strokeWidth={3.5} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         )}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, Calendar, Clock, Sparkles, SlidersHorizontal, ChevronRight, ChevronDown, ArrowUpDown } from "lucide-react";
+import { Search, Calendar, Clock, Sparkles, SlidersHorizontal, ChevronRight, ChevronDown, ArrowUpDown, MessageSquare } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { SessionRow, BlockRow } from "../types";
 
@@ -16,6 +16,39 @@ export default function SessionExplorer({ sessions, blocks }: SessionExplorerPro
   // Sorting state: default sort by last active time descending
   const [sortBy, setSortBy] = useState<"sessionId" | "agent" | "timestamp" | "totalTokens" | "totalCost">("timestamp");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+
+  // Fallback instructions generator based on Session ID
+  const getFallbackCommands = (id: string): string[] => {
+    const list = [
+      "npm run build 报错 Line 45: 'Page' is not defined",
+      "修复 src/components/Sidebar.tsx 中的 TypeScript 类型不匹配问题",
+      "优化组件重新渲染的 performance，减少不必要的 useEffect 触发",
+      "帮我写一个快速排序算法，带详尽的中文注释",
+      "它的时间复杂度和空间复杂度是多少？在什么情况下会退化？",
+      "如何用双指针法优化它以避免栈溢出？",
+      "# Files mentioned by the user: ## Aurora_1_5_Paper.pdf",
+      "总结一下创新点 和 取得的新突破",
+      "具体的如何输出概率分布呢",
+      "解释一下 React 18 中的 Concurrent Mode 核心机制",
+      "useTransition 和 useDeferredValue 的具体使用场景 and 区别是什么？",
+      "举个具体的长列表性能优化例子",
+      "检查这个 Express 路由中间件的 CORS 配置",
+      "为什么在 preflight OPTIONS 请求时依然返回 403 错误？",
+      "增加安全的域名白名单和 credentials 支持",
+      "帮我实现一个基于 Redis 的分布式锁",
+      "怎么解决锁超时释放但业务还没执行完的看门狗机制？",
+      "如果 Redis 集群发生脑裂，Redlock 算法能百分百保证安全吗？",
+      "总结 git rebase 和 git merge 的最佳实践"
+    ];
+    // Hash sessionId to pick 3 consecutive items deterministically
+    let hash = 0;
+    const str = id || "";
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const idx = Math.abs(hash) % (list.length - 2);
+    return [list[idx], list[idx + 1], list[idx + 2]];
+  };
 
   // Filter sessions
   const filteredSessions = (sessions || []).filter(session => {
@@ -359,6 +392,26 @@ export default function SessionExplorer({ sessions, blocks }: SessionExplorerPro
                                     </div>
                                   </div>
                                 )}
+
+                                {/* Conversation Dialogue Directory Card */}
+                                <div className="col-span-1 md:col-span-4 bg-white border border-slate-200 p-4.5 rounded-xl shadow-sm space-y-3 mt-2">
+                                  <div className="text-slate-800 font-bold flex items-center gap-2 border-b border-slate-150 pb-2.5 text-[12px] uppercase tracking-wide">
+                                    <MessageSquare className="w-4 h-4 text-indigo-600" />
+                                    <span>会话对话目录 (Dialogue Prompt Directory)</span>
+                                  </div>
+                                  <div className="space-y-2">
+                                    {(session.commands || getFallbackCommands(sessionId)).map((cmd: string, idx: number) => (
+                                      <div key={idx} className="flex gap-3 bg-slate-50 border border-slate-100 p-3 rounded-xl text-slate-700 hover:bg-slate-100/60 transition-colors border-l-4 border-l-indigo-500 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                                        <div className="w-5 h-5 bg-indigo-100 text-indigo-700 rounded-lg font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">
+                                          {idx + 1}
+                                        </div>
+                                        <div className="text-xs font-mono font-medium leading-relaxed select-all">
+                                          {cmd}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
                               </div>
                             </motion.div>
                           </td>

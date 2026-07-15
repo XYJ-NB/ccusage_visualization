@@ -308,6 +308,84 @@ function getMockSessionData() {
   const agents = ["Claude Code", "GitHub Copilot", "Gemini CLI"];
   const now = new Date();
 
+  const mockCommandsList = [
+    [
+      "npm run build 报错 Line 45: 'Page' is not defined",
+      "修复 src/components/Sidebar.tsx 中的 TypeScript 类型不匹配问题",
+      "优化组件重新渲染的 performance，减少不必要的 useEffect 触发"
+    ],
+    [
+      "帮我写一个快速排序算法，带详尽的中文注释",
+      "它的时间复杂度和空间复杂度是多少？在什么情况下会退化？",
+      "如何用双指针法优化它以避免栈溢出？"
+    ],
+    [
+      "# Files mentioned by the user: ## Aurora_1_5_Paper.pdf",
+      "总结一下创新点 和 取得的新突破",
+      "具体的如何输出概率分布呢"
+    ],
+    [
+      "解释一下 React 18 中的 Concurrent Mode 核心机制",
+      "useTransition 和 useDeferredValue 的具体使用场景和区别是什么？",
+      "举个具体的长列表性能优化例子"
+    ],
+    [
+      "检查这个 Express 路由中间件的 CORS 配置",
+      "为什么在 preflight OPTIONS 请求时依然返回 403 错误？",
+      "增加安全的域名白名单和 credentials 支持"
+    ],
+    [
+      "帮我实现一个基于 Redis 的分布式锁",
+      "怎么解决锁超时释放但业务还没执行完的看门狗机制？",
+      "如果 Redis 集群发生脑裂，Redlock 算法能百分百保证安全吗？"
+    ],
+    [
+      "总结 git rebase 和 git merge 的最佳实践",
+      "什么时候用 rebase，什么时候绝对不能用？",
+      "如何解决复杂的交互式 rebase 冲突？"
+    ],
+    [
+      "为 src/utils/math.ts 编写完整的 Jest 单元测试",
+      "模拟异步 API 失败的情况，测试 error boundary",
+      "增加覆盖率报告配置并集成到 CI/CD 流程"
+    ],
+    [
+      "优化这个 SQL 慢查询：SELECT * FROM users JOIN orders ON users.id = orders.user_id WHERE orders.created_at > '2026-01-01' ORDER BY orders.total DESC LIMIT 10",
+      "需要建哪些复合索引？写出 CREATE INDEX 语句",
+      "用 EXPLAIN 解释一下优化前后的执行计划差异"
+    ],
+    [
+      "介绍一下 WebAssembly 的工作原理 and 应用场景",
+      "如何把一个现有的 Rust 图像处理库编译成 WebAssembly 在 React 中调用？",
+      "比较一下 Web Worker + WASM 和纯 JS 的执行效率差异"
+    ],
+    [
+      "如何使用 Docker Compose 部署 Node + PostgreSQL + Redis 全栈应用？",
+      "编写一个生产环境的安全 Dockerfile，避免使用 root 用户",
+      "怎么在 Docker 容器启动时进行数据库自动迁移？"
+    ],
+    [
+      "怎么使用 Tailwind CSS 实现一个带有毛玻璃效果和动态渐变边框的精美卡片？",
+      "加上一个鼠标悬浮时卡片 3D 旋转和发光的微交互动画",
+      "兼容暗黑模式，并确保在移动端有极好的响应式适配"
+    ],
+    [
+      "分析这段代码的内存泄漏隐患：存在未清除的 EventListener 和 setInterval",
+      "在 React hook 中如何优雅地在销毁期进行垃圾清理？",
+      "怎么使用 Chrome DevTools 抓取 Memory Heap Snapshot 来定位泄漏点？"
+    ],
+    [
+      "如何在 Next.js 14 中使用 App Router 实现一个多语言国际化 (i18n) 系统？",
+      "支持路由前缀 /zh, /en 并能自动根据浏览器 header 语言进行重定向",
+      "保证 SEO 友好并支持服务器端组件直接读取翻译文件"
+    ],
+    [
+      "怎么写一个安全的 JWT 校验与 Refresh Token 机制？",
+      "Refresh Token 存放在哪里最安全？(Cookie HttpOnly v.s. LocalStorage)",
+      "解释一下防范 CSRF、XSS 和 Clickjacking 攻击的具体防御头配置"
+    ]
+  ];
+
   let totals = {
     cacheCreationTokens: 0,
     cacheReadTokens: 0,
@@ -349,7 +427,8 @@ function getMockSessionData() {
       cacheReadTokens: cacheRead,
       cacheCreationTokens: cacheWrite,
       totalTokens: input + output + cacheRead + cacheWrite,
-      totalCost: Number(cost.toFixed(4))
+      totalCost: Number(cost.toFixed(4)),
+      commands: mockCommandsList[i % mockCommandsList.length]
     });
 
     totals.inputTokens += input;
