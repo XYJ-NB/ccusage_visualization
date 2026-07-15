@@ -1,0 +1,6 @@
+{
+  "name": "CCUsage Dashboard",
+  "description": "A comprehensive real-time visual dashboard and analytics desktop application for monitoring local AI coding agent token consumption and costs directly powered by ccusage.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
